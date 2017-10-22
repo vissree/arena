@@ -1,0 +1,56 @@
+syntax enable
+set background=dark
+" colorscheme solarized
+" colorscheme badwolf
+colorscheme gruvbox
+let g:gruvbox_contrast_dark='soft'
+
+" vim-ariline
+let g:airline_theme='badwolf'
+
+" NERDTreeTabs
+let g:nerdtree_tabs_open_on_gui_startup
+let g:NERDTreeWinSize=20
+
+" bundled plugins using pathogen
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
+
+" numbering and swapfile location
+set nu
+set swapfile
+set dir=~/.vim/tmp
+
+" font and size
+set guifont=source\ code\ pro:h15
+
+" tab formating
+set tabstop=4
+set shiftwidth=4
+set softtabstop=2
+set smarttab
+set expandtab
+
+" Syntastic defaults
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_python_checkers = ['pyflakes']
+
+" More customization
+set ruler
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set backspace=indent,eol,start
+set autochdir
+
+" ctrlp.vim
+set runtimepath^=~/.vim/bundle/ctrlp.vim
