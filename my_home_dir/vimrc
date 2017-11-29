@@ -9,8 +9,11 @@ let g:gruvbox_contrast_dark='soft'
 let g:airline_theme='badwolf'
 
 " NERDTreeTabs
-let g:nerdtree_tabs_open_on_gui_startup
-let g:NERDTreeWinSize=20
+" Only on GUI
+if has("gui_running")
+    let g:nerdtree_tabs_open_on_gui_startup
+    let g:NERDTreeWinSize=20
+endif
 
 " bundled plugins using pathogen
 execute pathogen#infect()
