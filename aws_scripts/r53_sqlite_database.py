@@ -1,6 +1,6 @@
 import sqlite3
 
-DEBUG = True
+DEBUG = False
 
 class R53SQLDatabase(object):
 
@@ -19,13 +19,25 @@ class R53SQLDatabase(object):
         self._drop_table()
         self._create_table()
 
-    def execute_query(self, query):
+    def initialize_delete_db(self):
+        self._drop_del_table()
+        self._create_del_table()
+
+    def execute_query(self, query, values=[]):
         if DEBUG:
             print(query)
         if self.connection:
             c = self.connection.cursor()
-            c.execute(query)
+            c.execute(query, values)
             self.connection.commit()
+
+            # Return a list of tuples for selects
+            if query.lstrip().upper().startswith('SELECT'):
+                result = c.fetchall()
+                c.close()
+                return result
+            else:
+                c.close()
         else:
             print('No connection to database')
 
@@ -33,9 +45,19 @@ class R53SQLDatabase(object):
         query = "DROP TABLE IF EXISTS {table_name};".format(table_name=self.table_name)
         self.execute_query(query)
 
+
     def _create_table(self):
         query = "CREATE TABLE {table_name}(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, ttl INTEGER, alias BOOLEAN, weighted BOOLEAN, value VARCHAR, weight INTEGER, type VARCHAR)".format(table_name=self.table_name)
         self.execute_query(query)
+
+    def _drop_del_table(self):
+        query = "DROP TABLE IF EXISTS {table_name}_to_del;".format(table_name=self.table_name)
+        self.execute_query(query)
+
+    def _create_del_table(self):
+        query = "CREATE TABLE {table_name}_to_del(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, value VARCHAR, type VARCHAR)".format(table_name=self.table_name)
+        self.execute_query(query)
+
 
     def upload_resource_records(self, resource_records):
         if self.connection:
@@ -46,23 +68,34 @@ class R53SQLDatabase(object):
                     print(record)
 
                 if set(self.table_struct) == set(record.keys()):
-                    query = ("""INSERT INTO {table_name} (alias, weighted, weight, name, value, ttl, type) 
-                             VALUES ({alias}, {weighted}, {weight}, "{name}", "{value}", {ttl}, "{rtype}");""".format(
-                                 table_name=self.table_name,
-                                 alias=record['alias'],
-                                 weighted=record['weighted'],
-                                 weight=record['weight'],
-                                 name=record['name'],
-                                 value=record['value'],
-                                 ttl=record['ttl'],
-                                 rtype=record['type']))
+                    query = "INSERT INTO {table_name} (alias, weighted, weight, name, value, ttl, type) VALUES (?, ?, ?, ?, ?, ?, ?);".format(table_name=self.table_name)
                     if DEBUG:
                         print(query)
 
-                    c.execute(query)
+                    c.execute(query, (record['alias'],
+                                        record['weighted'],
+                                        record['weight'],
+                                        record['name'],
+                                        record['value'],
+                                        record['ttl'],
+                                        record['type']))
                 else:
                     print('Possible malformed input, skipping row')
 
             self.connection.commit()
+            c.close()
         else:
             print('No connection to database')
+
+    def get_parent_records(self, target, final_result=[]):
+        query = "SELECT name, value, type FROM {table_name} WHERE value=?;".format(table_name=self.table_name)
+        result = self.execute_query(query, (target,))
+        if len(result) > 0:
+            for row in result:
+                print(row)
+                final_result.append(row)
+                name, value, rtype = row
+                print(name)
+                return self.get_parent_records(name, final_result=final_result)
+        else:
+            return final_result
