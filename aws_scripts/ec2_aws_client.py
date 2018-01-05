@@ -10,7 +10,7 @@ class EC2AWSClient(object):
         self.connection = {}
         for region in REGIONS:
             try:
-                self.connection_pool[region] = boto3.client('ec2', region_name=region, aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+                self.connection[region] = boto3.client('ec2', region_name=region, aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
             except ClientError as e:
                 print("Error getting a connection for {region}".format(region=region))
                 print("{error}".format(error=e))
@@ -27,7 +27,7 @@ class EC2AWSClient(object):
                             }]
                         )
 
-            if len(response['Reservations'] > 0):
+            if len(response['Reservations']) > 0:
                 found = True
                 reservation = response['Reservations'][0] # Assuming that the reservation will be unique
                 break
