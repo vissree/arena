@@ -2,7 +2,7 @@ from botocore.exceptions import ClientError
 from botocore.exceptions import ParamValidationError 
 import boto3
 
-DEBUG = True
+DEBUG = False
 
 class R53AWSClient(object):
 
@@ -109,3 +109,33 @@ class R53AWSClient(object):
                     next_record_type = response['NextRecordType']
             else:
                 is_truncated = False
+
+    def delete_record_set(self, name, rtype, value):
+        if self.rc:
+            try:
+                self.rc.change_resource_record_sets(
+                            HostedZoneId='string',
+                            ChangeBatch={
+                                'Comment': 'string',
+                                'Changes': [
+                                    {
+                                        'Action': 'DELETE',
+                                        'ResourceRecordSet': {
+                                            'Name': name,
+                                            'Type': rtype,
+                                            'ResourceRecords': [
+                                                {
+                                                    'Value': value
+                                                }
+                                            ],
+                                        }
+                                    }
+                                ]
+                            })
+                return True
+            except ClientError as e:
+                print("Failed to delete record {name}".format(name=name))
+                print("{error}".format(error=e))
+                return False
+        else:
+            return False
