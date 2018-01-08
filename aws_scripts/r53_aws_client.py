@@ -110,11 +110,12 @@ class R53AWSClient(object):
             else:
                 is_truncated = False
 
-    def delete_record_set(self, name, rtype, value):
+    def delete_record_set(self, name, rtype, value, ttl):
+        """http://boto3.readthedocs.io/en/latest/reference/services/route53.html#Route53.Client.change_resource_record_sets"""
         if self.rc:
             try:
                 self.rc.change_resource_record_sets(
-                            HostedZoneId='string',
+                            HostedZoneId= self.hosted_zone_id,
                             ChangeBatch={
                                 'Comment': 'string',
                                 'Changes': [
@@ -123,6 +124,7 @@ class R53AWSClient(object):
                                         'ResourceRecordSet': {
                                             'Name': name,
                                             'Type': rtype,
+                                            'TTL': ttl,
                                             'ResourceRecords': [
                                                 {
                                                     'Value': value
