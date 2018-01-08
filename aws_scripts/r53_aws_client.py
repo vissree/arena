@@ -59,10 +59,12 @@ class R53AWSClient(object):
             name = record['Name']
             rtype = record['Type']
             values = []
+            set_id = 'null'
 
             if 'Weight' in record.keys():
                 weighted = 1
                 weight = record['Weight']
+                set_id = record['SetIdentifier']
 
             if 'AliasTarget' in record.keys():
                 alias = 1
@@ -81,7 +83,8 @@ class R53AWSClient(object):
                     'name': name,
                     'value': value,
                     'ttl': ttl,
-                    'type': rtype
+                    'type': rtype,
+                    'set_id': set_id
                     }
 
                 if DEBUG:
@@ -110,29 +113,28 @@ class R53AWSClient(object):
             else:
                 is_truncated = False
 
-    def delete_record_set(self, name, rtype, value, ttl):
+    def delete_record_set(self, name, rtype, value, ttl, set_id=None, weight=None):
         """http://boto3.readthedocs.io/en/latest/reference/services/route53.html#Route53.Client.change_resource_record_sets"""
+        resource_records = { 'Value': value }
+        resource_record_set = { 'Name': name,
+                                'Type': rtype,
+                                'TTL': ttl,
+                                'ResourceRecords': [resource_records],
+                              }
+        if set_id:
+            resource_record_set['SetIdentifier'] = set_id
+            resource_record_set['Weight'] = weight
+
+        change_set = { 'Action': 'DELETE',
+                       'ResourceRecordSet': resource_record_set
+                     }
         if self.rc:
             try:
                 self.rc.change_resource_record_sets(
                             HostedZoneId= self.hosted_zone_id,
                             ChangeBatch={
-                                'Comment': 'string',
-                                'Changes': [
-                                    {
-                                        'Action': 'DELETE',
-                                        'ResourceRecordSet': {
-                                            'Name': name,
-                                            'Type': rtype,
-                                            'TTL': ttl,
-                                            'ResourceRecords': [
-                                                {
-                                                    'Value': value
-                                                }
-                                            ],
-                                        }
-                                    }
-                                ]
+                                'Comment': 'Deleted part of clean up',
+                                'Changes': [ change_set ]
                             })
                 return True
             except ClientError as e:

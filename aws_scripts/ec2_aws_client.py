@@ -31,7 +31,7 @@ class EC2AWSClient(object):
             response = self.connection[region].describe_instances(
                         Filters=[{
                             'Name': filter_key,
-                            'Values': [value]
+                            'Values': [value.strip('.')]
                             }]
                         )
 

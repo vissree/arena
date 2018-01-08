@@ -23,13 +23,14 @@ if __name__ == "__main__":
     r53_db = R53SQLDatabase(args.hosted_zone_id)# Get the records that needs to be deleted
 
     # Get the records that needs to be deleted
-    query = "SELECT name, value, type, ttl from {table_name};".format(table_name=table_name_to_del)
+    query = "SELECT name, value, type, ttl, set_id, weight from {table_name};".format(table_name=table_name_to_del)
     all_records_to_delete = r53_db.execute_query(query)
     deleted_records = []
     failed_to_del = []
 
-    for name, value, rtype, ttl in all_records_to_delete:
-        if r53.delete_record_set(name, rtype, value, ttl):
+    for name, value, rtype, ttl, set_id, weight in all_records_to_delete:
+        set_id = set_id if set_id != 'null' else None
+        if r53.delete_record_set(name, rtype, value, ttl, set_id, weight):
             deleted_records.append((name, rtype, value, ttl))
         else:
             failed_to_del.append((name, rtype, value, ttl))
@@ -37,12 +38,12 @@ if __name__ == "__main__":
     if DEBUG:
         print('DELETED RECORDS')
         print('===============')
-        for name, rtype, value in deleted_records:
+        for name, rtype, value, ttl in deleted_records:
             print("{0} {1} {2}".format(name, rtype, value))
 
         print("FAILED TO DELETE")
         print('=================')
-        for name, rtype, value in failed_to_del:
+        for name, rtype, value, ttl in failed_to_del:
             print("{0} {1} {2}".format(name, rtype, value))
 
     r53_db.close_connection()

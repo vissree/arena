@@ -8,7 +8,7 @@ class R53SQLDatabase(object):
         self.db_name = "{0}.db".format(hosted_zone_id)
         self.connection = sqlite3.connect(self.db_name)
         self.table_name = table_name
-        self.table_struct = ['alias', 'weighted', 'weight', 'name', 'value', 'ttl', 'type']
+        self.table_struct = ['alias', 'weighted', 'weight', 'name', 'value', 'ttl', 'type', 'set_id']
 
     def close_connection(self):
         self.connection.commit()
@@ -46,7 +46,7 @@ class R53SQLDatabase(object):
         self.execute_query(query)
 
     def _create_table(self):
-        query = "CREATE TABLE {table_name}(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, ttl INTEGER, alias BOOLEAN, weighted BOOLEAN, value VARCHAR, weight INTEGER, type VARCHAR)".format(table_name=self.table_name)
+        query = "CREATE TABLE {table_name}(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, ttl INTEGER, alias BOOLEAN, weighted BOOLEAN, value VARCHAR, weight INTEGER, type VARCHAR, set_id VARCHAR)".format(table_name=self.table_name)
         self.execute_query(query)
 
     def _drop_del_table(self):
@@ -54,7 +54,7 @@ class R53SQLDatabase(object):
         self.execute_query(query)
 
     def _create_del_table(self):
-        query = "CREATE TABLE {table_name}_to_del(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, value VARCHAR, type VARCHAR, ttl INTEGER)".format(table_name=self.table_name)
+        query = "CREATE TABLE {table_name}_to_del(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, value VARCHAR, type VARCHAR, ttl INTEGER, set_id VARCHAR, weight INTEGER)".format(table_name=self.table_name)
         self.execute_query(query)
 
 
@@ -67,7 +67,7 @@ class R53SQLDatabase(object):
                     print(record)
 
                 if set(self.table_struct) == set(record.keys()):
-                    query = "INSERT INTO {table_name} (alias, weighted, weight, name, value, ttl, type) VALUES (?, ?, ?, ?, ?, ?, ?);".format(table_name=self.table_name)
+                    query = "INSERT INTO {table_name} (alias, weighted, weight, name, value, ttl, type, set_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);".format(table_name=self.table_name)
                     if DEBUG:
                         print(query)
 
@@ -77,7 +77,8 @@ class R53SQLDatabase(object):
                                         record['name'],
                                         record['value'],
                                         record['ttl'],
-                                        record['type']))
+                                        record['type'],
+                                        record['set_id']))
                 else:
                     print('Possible malformed input, skipping row')
 
@@ -87,12 +88,12 @@ class R53SQLDatabase(object):
             print('No connection to database')
 
     def get_parent_records(self, target, final_result=[]):
-        query = "SELECT name, value, type, ttl, weighted, weight FROM {table_name} WHERE value=?;".format(table_name=self.table_name)
+        query = "SELECT name, value, type, ttl, weighted, weight, set_id FROM {table_name} WHERE value=?;".format(table_name=self.table_name)
         result = self.execute_query(query, (target,))
         if len(result) > 0:
             for row in result:
                 if row not in final_result:
-                    name, value, rtype, ttl, weighted, weight = row
+                    name, value, rtype, ttl, weighted, weight, set_id = row
                     if weighted == 1:
                         if weight != 0:
                             final_result.append(row)

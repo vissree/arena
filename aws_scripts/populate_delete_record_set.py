@@ -6,23 +6,23 @@ import re
 DEBUG = False
 
 def add_all_parent_records(result, filter_type):
-    name, value, rtype, ttl = result
+    name, value, rtype, ttl, weight, set_id = result
     output = ec2.search_instance(filter_type, value, verbose=True)
 
     if not output:
-        query = "INSERT INTO {table_name} (name, value, type, ttl) VALUES (?, ?, ?, ?);".format(table_name=table_name_to_del)
+        query = "INSERT INTO {table_name} (name, value, type, ttl, weight, set_id) VALUES (?, ?, ?, ?, ?, ?);".format(table_name=table_name_to_del)
         if DEBUG:
             print("{0} : {1} : {2}".format(name, rtype, value))
-        r53_db.execute_query(query, (name, value, rtype, ttl))
+        r53_db.execute_query(query, (name, value, rtype, ttl, weight, set_id))
 
         # Get all parent records
         records_to_delete = r53_db.get_parent_records(name)
 
         if records_to_delete:
-            for name, value, rtype, ttl, weighted, weight in records_to_delete:
+            for name, value, rtype, ttl, weighted, weight, set_id in records_to_delete:
                 if DEBUG:
                     print("{0} : {1} : {2}".format(name, rtype, value))
-                r53_db.execute_query(query, (name, value, rtype, ttl))
+                r53_db.execute_query(query, (name, value, rtype, ttl, weight, set_id))
     
 
 if __name__ == "__main__":
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     r53_db.initialize_delete_db()  # Create records_to_del table
 
     for rtype in ['A', 'CNAME']:
-        query = "SELECT name, value, type, ttl FROM {table_name} WHERE type='{rtype}' and alias=0;".format(table_name=table_name, rtype=rtype)
+        query = "SELECT name, value, type, ttl, weight, set_id FROM {table_name} WHERE type='{rtype}' and alias=0;".format(table_name=table_name, rtype=rtype)
         results = r53_db.execute_query(query)
 
         if rtype == 'A':
@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
         if rtype == 'CNAME':
             for result in results:
-                name, value, rtype, ttl = result
+                name, value, rtype, ttl, weight, set_id = result
                 if re.search(r'ec2(-\d{1,3}){4}\.compute-1\.amazonaws\.com\.?', value):
                     add_all_parent_records(result, 'cname')
                 elif re.search(r'ip(-\d{1,3}){4}\.ec2\.internal\.?', value):
