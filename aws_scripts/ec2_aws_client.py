@@ -15,15 +15,23 @@ class EC2AWSClient(object):
                 print("Error getting a connection for {region}".format(region=region))
                 print("{error}".format(error=e))
 
-    def search_instance_by_ip(self, ip, verbose=False):
-        filter_key = 'private-ip-address' if ipaddress.ip_address(ip).is_private else 'ip-address'
+    def search_instance(self, filter_type, value, verbose):
+        if filter_type == 'cname':
+            filter_key = 'dns-name'
+
+        if filter_type == 'ip':
+            filter_key = 'private-ip-address' if ipaddress.ip_address(value).is_private else 'ip-address'
+
+        if filter_type == 'private_dns':
+            filter_key = 'private-dns-name'
+
         reservation = None
         found = False
         for region in self.connection:
             response = self.connection[region].describe_instances(
                         Filters=[{
                             'Name': filter_key,
-                            'Values': [ip]
+                            'Values': [value]
                             }]
                         )
 
@@ -41,7 +49,16 @@ class EC2AWSClient(object):
                     instance_name = tag['Value']
                     break
 
-            output = {'region': region, 'instance_id': instance_id, 'name': instance_name}
+            output = (region, instance_id, instance_name)
             return output
         else:
             return found
+
+    def search_instance_by_cname(self, cname, verbose=False):
+        self.search_instance('cname', cname, verbose)
+
+    def search_instance_by_ip(self, ip, verbose=False):
+        self.search_instance('ip', ip, verbose)
+
+    def search_instance_by_private_dns(self, cname, verbose=False):
+        self.search_instance('private_dns', cname, verbose)
