@@ -45,7 +45,6 @@ class R53SQLDatabase(object):
         query = "DROP TABLE IF EXISTS {table_name};".format(table_name=self.table_name)
         self.execute_query(query)
 
-
     def _create_table(self):
         query = "CREATE TABLE {table_name}(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, ttl INTEGER, alias BOOLEAN, weighted BOOLEAN, value VARCHAR, weight INTEGER, type VARCHAR)".format(table_name=self.table_name)
         self.execute_query(query)
@@ -55,7 +54,7 @@ class R53SQLDatabase(object):
         self.execute_query(query)
 
     def _create_del_table(self):
-        query = "CREATE TABLE {table_name}_to_del(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, value VARCHAR, type VARCHAR)".format(table_name=self.table_name)
+        query = "CREATE TABLE {table_name}_to_del(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, value VARCHAR, type VARCHAR, ttl INTEGER)".format(table_name=self.table_name)
         self.execute_query(query)
 
 
@@ -88,14 +87,18 @@ class R53SQLDatabase(object):
             print('No connection to database')
 
     def get_parent_records(self, target, final_result=[]):
-        query = "SELECT name, value, type FROM {table_name} WHERE value=?;".format(table_name=self.table_name)
+        query = "SELECT name, value, type, ttl, weighted, weight FROM {table_name} WHERE value=?;".format(table_name=self.table_name)
         result = self.execute_query(query, (target,))
         if len(result) > 0:
             for row in result:
-                print(row)
-                final_result.append(row)
-                name, value, rtype = row
-                print(name)
-                return self.get_parent_records(name, final_result=final_result)
+                if row not in final_result:
+                    name, value, rtype, ttl, weighted, weight = row
+                    if weighted == 1:
+                        if weight != 0:
+                            final_result.append(row)
+                            return self.get_parent_records(name, final_result=final_result)
+                    else:
+                            final_result.append(row)
+                            return self.get_parent_records(name, final_result=final_result)
         else:
             return final_result
