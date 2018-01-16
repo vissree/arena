@@ -45,20 +45,20 @@ if __name__ == "__main__":
 
     r53_db.initialize_delete_db()  # Create records_to_del table
 
-    for rtype in ['A', 'CNAME']:
-        query = "SELECT name, value, type, ttl, weight, set_id FROM {table_name} WHERE type='{rtype}' and alias=0;".format(table_name=table_name, rtype=rtype)
-        results = r53_db.execute_query(query)
+    query = "SELECT name, value, type, ttl, weight, set_id FROM {table_name} WHERE (type='A' OR type='CNAME') AND alias=0;"
+    results = r53_db.execute_query(query)
+
+    for result in results:
+        name, value, rtype, ttl, weight, set_id = result
 
         if rtype == 'A':
-            for result in results:
-                add_all_parent_records(result, 'ip')
+            add_all_parent_records(result, 'ip')
 
         if rtype == 'CNAME':
-            for result in results:
-                name, value, rtype, ttl, weight, set_id = result
-                if re.search(r'ec2(-\d{1,3}){4}\.compute-1\.amazonaws\.com\.?', value):
-                    add_all_parent_records(result, 'cname')
-                elif re.search(r'ip(-\d{1,3}){4}\.ec2\.internal\.?', value):
-                    add_all_parent_records(result, 'private_dns')
+            name, value, rtype, ttl, weight, set_id = result
+            if re.search(r'ec2(-\d{1,3}){4}\.compute-1\.amazonaws\.com\.?', value):
+                add_all_parent_records(result, 'cname')
+            elif re.search(r'ip(-\d{1,3}){4}\.ec2\.internal\.?', value):
+                add_all_parent_records(result, 'private_dns')
 
     r53_db.close_connection()
