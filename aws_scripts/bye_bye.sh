@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-if [ ! "$#" -gt 0 ]; then
+if [ "$#" -lt 1 ]; then
   echo "Usage: ${0##*/} user1 [user2 [user3 .. [userN]]]"
   exit 126
 fi
