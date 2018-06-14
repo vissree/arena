@@ -63,6 +63,16 @@ for user in $@; do
     echo "removing login profile"
     ${iam} delete-login-profile --user-name "${user}"
 
+    # detach managed policies
+    echo "checking for managed policies"
+    policies=$(${iam} list-attached-user-policies --user-name "${user}")
+
+    for policy in $(echo "${policies}" | ${_jq} '.AttachedPolicies[].PolicyArn' | tr -d '"'); do
+      if [ ! -z "${policy}" ]; then
+        ${iam} detach-user-policy --user-name "${user}" --policy-arn "${policy}"
+      fi
+    done
+
     # remove user from all member groups
     echo "removing from all groups"
     groups=$(${iam} list-groups-for-user --user-name "${user}")
