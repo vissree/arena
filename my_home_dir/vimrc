@@ -11,6 +11,7 @@ let g:airline_theme='badwolf'
 " Only on GUI
 if has("gui_running")
     " NERDTree Size settings
+    autocmd vimenter * NERDTree
     let g:nerdtree_tabs_open_on_gui_startup
     let g:NERDTreeWinSize=20
 
@@ -47,19 +48,9 @@ set dir=~/.vim/tmp
 set guifont=source\ code\ pro:h15
 
 " tab formating
-au BufNewFile,BufRead *.py
-    \ set tabstop=4 |
-    \ set shiftwidth=4 |
-    \ set softtabstop=4 |
-    \ set fileformat=unix
-au BufNewFile,BufRead *.js, *.html, *.rb, *.css
-    \ set tabstop=2 |
-    \ set softtabstop=2 |
-    \ set shiftwidth=2
-
-set smarttab
-set expandtab
-set autoindent
+au BufNewFile,BufRead *.py,*.yaml,*.yml set tabstop=4 shiftwidth=4 softtabstop=4 fileformat=unix
+au BufNewFile,BufRead *.js,*.html,*.rb,*.css set tabstop=2 softtabstop=2 shiftwidth=2
+set smarttab expandtab autoindent
 
 " Folding
 set foldmethod=indent
