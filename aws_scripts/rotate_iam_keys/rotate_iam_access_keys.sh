@@ -35,7 +35,7 @@ function create_update_delete() {
   # replace the keys in the credentials file
   # ugly - learn sed, possibly can be done in one pass
   sed -i '/'"${account_name}"'/!b;n;c\aws_access_key_id = '"${new_access_key}" "${CREDENTIALS_FILE}"
-  sed -i '/'"${account_name}"'/!b;n;n;c\aws_secret_access_key = '"${new_access_key}" "${CREDENTIALS_FILE}"
+  sed -i '/'"${account_name}"'/!b;n;n;c\aws_secret_access_key = '"${new_secret_key}" "${CREDENTIALS_FILE}"
 
   # deactivate the old keys
   unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
