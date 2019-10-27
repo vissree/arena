@@ -7,7 +7,7 @@ function aws-reset() {
 
 function wrap_mfa_usage() {
     echo "Missing required parameters"
-    echo "${FUNCTION_NAME[0]} profile account-number-without-hyphen mfacode"
+    echo "${FUNCNAME[0]} profile account-number-without-hyphen mfacode"
 }
 
 
