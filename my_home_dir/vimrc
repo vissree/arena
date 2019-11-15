@@ -1,15 +1,19 @@
 " vim-plug
 " plugins directory
 call plug#begin('~/.vim/bundle')
+Plug 'vim-airline/vim-airline'
 Plug 'vim-syntastic/syntastic'
 Plug 'tpope/vim-sensible'
 Plug 'scrooloose/nerdtree'
 Plug 'kien/ctrlp.vim'
-" Plug 'psf/black' - disabled because vim is compiled with python 3.5
+Plug 'psf/black'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'neoclide/coc-python'
-Plug 'josa42/coc-sh'
 Plug 'neoclide/coc-git'
+Plug 'neoclide/coc-yaml'
+Plug 'josa42/coc-sh'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'ekalinin/dockerfile.vim'
 call plug#end()
 
 " automatically install missing plugins on startup
@@ -112,10 +116,11 @@ if has("gui_running")
     noremap <D-0> :tablast<CR>
 endif
 
-" DISABLED Run Black to auto format Python code
-" autocmd BufWritePre *.py execute ':Black'
+" Run Black to auto format Python code
+ autocmd BufWritePre *.py execute ':Black'
 " map F9 to Black
-" nnoremap <F9> :Black<CR>
+ nnoremap <F9> :Black<CR>
+
 " coc-vim customization
 "
 " if hidden is not set, TextEdit might fail.
