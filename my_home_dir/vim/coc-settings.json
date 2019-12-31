@@ -1,0 +1,30 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": ["*.py"],
+  "python.pythonPath": "/Users/vishnu/.pyenv/shims/python",
+  "python.formatting.provider": "black",
+  "python.formatting.blackPath": "/Users/vishnu/.pyenv/shims/black",
+  "python.formatting.blackArgs": [ "-l", "80" ],
+  "python.autoComplete.addBrackets": true,
+  "python.linting.flake8Args": [
+    "--max-line-length", "80",
+    "--select", "C,E,F,W,B,B950",
+    "--ignore", "E203, E501, W503"
+  ],
+  "python.linting.flake8Enabled": true,
+  "languageserver": {
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": ["sh"],
+      "ignoredRootPaths": ["~"]
+    },
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
+    }
+  }
+}
