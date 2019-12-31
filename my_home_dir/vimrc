@@ -2,18 +2,10 @@
 " plugins directory
 call plug#begin('~/.vim/bundle')
 Plug 'vim-airline/vim-airline'
-Plug 'vim-syntastic/syntastic'
 Plug 'tpope/vim-sensible'
 Plug 'scrooloose/nerdtree'
 Plug 'kien/ctrlp.vim'
-Plug 'psf/black'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neoclide/coc-python'
-Plug 'neoclide/coc-git'
-Plug 'neoclide/coc-yaml'
-Plug 'josa42/coc-sh'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'ekalinin/dockerfile.vim'
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 call plug#end()
 
 " automatically install missing plugins on startup
@@ -73,15 +65,15 @@ nnoremap <space> za
 set list
 
 " Syntastic defaults
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-let g:syntastic_python_checkers = ['pyflakes']
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" 
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 1
+" let g:syntastic_python_checkers = ['pyflakes']
 
 " ctrlp.vim
 let g:ctrlp_map = '<c-p>'
@@ -115,11 +107,6 @@ if has("gui_running")
     " Command-0 goes to the last tab
     noremap <D-0> :tablast<CR>
 endif
-
-" Run Black to auto format Python code
- autocmd BufWritePre *.py execute ':Black'
-" map F9 to Black
- nnoremap <F9> :Black<CR>
 
 " coc-vim customization
 "
@@ -225,3 +212,6 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+" gopls
+autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
