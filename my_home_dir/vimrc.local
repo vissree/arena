@@ -1,0 +1,9 @@
+" color, font and size
+set background=dark
+colorscheme gruvbox
+" let g:gruvbox_contrast_dark='dark'
+let g:rehash256 = 1
+
+" Python linting
+let g:ale_python_flake8_options = '--max-line-length 80 --ignore=E203,E501,W503 --select=C,E,F,W,B,B950'
+let g:black_linelength = 80
