@@ -1,9 +1,23 @@
+" No vi compatibility
+set nocompatible
+
 " color, font and size
 set background=dark
 colorscheme gruvbox
-" let g:gruvbox_contrast_dark='dark'
+" set termguicolors
+let g:gruvbox_contrast_dark='dark'
 let g:rehash256 = 1
 
 " Python linting
 let g:ale_python_flake8_options = '--max-line-length 80 --ignore=E203,E501,W503 --select=C,E,F,W,B,B950'
 let g:black_linelength = 80
+
+" CTAGS
+command! MakeTags !/usr/local/bin/ctags -R .
+" Load tags file from GOPATH if filetype is GO
+augroup go-overrides
+ autocmd Filetype go setlocal tags=./tags,tags,$GOPATH/tags
+augroup END
+
+" Path
+set path+=**
