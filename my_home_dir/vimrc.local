@@ -14,9 +14,10 @@ let g:black_linelength = 80
 
 " CTAGS
 command! MakeTags !/usr/local/bin/ctags -R .
+
 " Load tags file from GOPATH if filetype is GO
 augroup go-overrides
- autocmd Filetype go setlocal tags=./tags,tags,$GOPATH/tags
+ autocmd Filetype go setlocal tags+=$GOPATH/tags
 augroup END
 
 " Path
