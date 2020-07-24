@@ -1,4 +1,4 @@
 arena
 =====
 
-Placeholder for my work
+My home directory and other customized dot files
