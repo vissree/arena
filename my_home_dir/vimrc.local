@@ -1,6 +1,15 @@
 " No vi compatibility
 set nocompatible
 
+" Path
+set path+=**
+
+" Display all matching files when we tab complete
+set wildmenu
+
+" CTAGS
+command! MakeTags !/usr/local/bin/ctags -R .
+
 " color, font and size
 set background=dark
 colorscheme gruvbox
@@ -12,13 +21,10 @@ let g:rehash256 = 1
 let g:ale_python_flake8_options = '--max-line-length 80 --ignore=E203,E501,W503 --select=C,E,F,W,B,B950'
 let g:black_linelength = 80
 
-" CTAGS
-command! MakeTags !/usr/local/bin/ctags -R .
-
 " Load tags file from GOPATH if filetype is GO
-augroup go-overrides
- autocmd Filetype go setlocal tags+=$GOPATH/tags
-augroup END
+" augroup go-overrides
+"  autocmd Filetype go setlocal tags+=$GOPATH/tags
+" augroup END
 
-" Path
-set path+=**
+" vim-go overrides
+let g:go_test_timeout= '1m'
