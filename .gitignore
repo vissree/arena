@@ -38,3 +38,6 @@ nosetests.xml
 
 # SQLite
 *.db
+
+# Mac
+**/.DS_Store
