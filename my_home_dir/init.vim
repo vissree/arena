@@ -6,7 +6,6 @@
 "*****************************************************************************
 let g:python3_host_prog = '/Users/vishnu/.pyenv/versions/neovim-default/bin/python'
 
-
 "*****************************************************************************
 "" Vim-Plug core
 "*****************************************************************************
@@ -17,7 +16,7 @@ else
   let curl_exists=expand('curl')
 endif
 
-let g:vim_bootstrap_langs = "html,javascript"
+let g:vim_bootstrap_langs = ""
 let g:vim_bootstrap_editor = "nvim"				" nvim or vim
 let g:vim_bootstrap_theme = "gruvbox"
 let g:vim_bootstrap_frams = ""
@@ -52,17 +51,11 @@ Plug 'vim-scripts/grep.vim'
 Plug 'vim-scripts/CSApprox'
 Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
-" Plug 'dense-analysis/ale' "Replace with coc.vim
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
-
 Plug 'Yggdroot/indentLine'
 Plug 'editor-bootstrap/vim-bootstrap-updater'
 Plug 'tpope/vim-rhubarb' " required by fugitive to :Gbrowse
-" Plug 'tomasr/molokai'
+Plug 'tpope/vim-surround'
 Plug 'morhetz/gruvbox'
-
-
 
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -84,9 +77,17 @@ Plug 'xolox/vim-session'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-"*****************************************************************************
-"" Custom bundles
-"*****************************************************************************
+"" Code completion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" go
+"" Go Lang Bundle
+Plug 'fatih/vim-go', {'do': ':GoInstallBinaries', 'for': 'go'}
+
+" python
+Plug 'davidhalter/jedi-vim', {'for': 'python'}
+Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+Plug 'psf/black', {'branch': 'stable', 'for': 'python'}
 
 " html
 "" HTML Bundle
@@ -98,11 +99,12 @@ Plug 'mattn/emmet-vim'
 
 " javascript
 "" Javascript Bundle
-Plug 'jelera/vim-javascript-syntax'
+Plug 'jelera/vim-javascript-syntax', {'for': 'javascript'}
 
 
-"*****************************************************************************
-"*****************************************************************************
+" typescript
+Plug 'leafgarland/typescript-vim', {'for': 'typescript'}
+Plug 'HerringtonDarkholme/yats.vim', {'for': 'typescript'}
 
 "" Include user's extra bundle
 if filereadable(expand("~/.config/nvim/local_bundles.vim"))
@@ -395,9 +397,6 @@ let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 let g:UltiSnipsEditSplit="vertical"
 
-" ale
-let g:ale_linters = {}
-
 " Tagbar
 nmap <silent> <F4> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
@@ -453,34 +452,6 @@ vnoremap K :m '<-2<CR>gv=gv
 nnoremap <Leader>o :.Gbrowse<CR>
 
 "*****************************************************************************
-"" Custom configs
-"*****************************************************************************
-
-" html
-" for html files, 2 spaces
-autocmd Filetype html setlocal ts=2 sw=2 expandtab
-
-
-" javascript
-let g:javascript_enable_domhtmlcss = 1
-
-" vim-javascript
-augroup vimrc-javascript
-  autocmd!
-  autocmd FileType javascript setl tabstop=4|setl shiftwidth=4|setl expandtab softtabstop=4
-augroup END
-
-
-
-"*****************************************************************************
-"*****************************************************************************
-
-"" Include user's local vim config
-if filereadable(expand("~/.config/nvim/local_init.vim"))
-  source ~/.config/nvim/local_init.vim
-endif
-
-"*****************************************************************************
 "" Convenience variables
 "*****************************************************************************
 
@@ -519,3 +490,27 @@ else
   let g:airline_symbols.readonly = ''
   let g:airline_symbols.linenr = ''
 endif
+
+"*****************************************************************************
+"" Custom configs
+"*****************************************************************************
+
+" Golang
+"
+autocmd BufNewFile,BufRead *.go if filereadable(expand("~/.config/nvim/go.init.vim")) | source ~/.config/nvim/go.init.vim | endif
+
+" Python
+"
+autocmd BufNewFile,BufRead *.py if filereadable(expand("~/.config/nvim/python.init.vim")) | source ~/.config/nvim/python.init.vim | endif
+
+" Frontend
+"
+autocmd BufNewFile,BufRead *.js,*.ts,*.css,*.html if filereadable(expand("~/.config/nvim/web.init.vim")) | source ~/.config/nvim/web.init.vim | endif
+
+"" Include user's local vim config
+if filereadable(expand("~/.config/nvim/local_init.vim"))
+  source ~/.config/nvim/local_init.vim
+endif
+
+"*****************************************************************************
+"*****************************************************************************
