@@ -1,6 +1,9 @@
 " No vi compatibility
 set nocompatible
 
+" Set backup directory to tmp
+set backupdir=~/.vim/tmp
+
 " Path
 set path+=**
 
