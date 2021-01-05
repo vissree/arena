@@ -1,0 +1,102 @@
+# Update prompt
+# export PS1="\u@\h: \[\e[1m\]\W\[\e[0m\] $ "
+export PS1="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\W\[\033[m\]\$ "
+
+# Set the palette for gruvbox 256color
+# source "$HOME/.vim/colors/gruvbox_256palette.sh"
+
+# Different colors based on filetypes
+export CLICOLOR=1
+export LSCOLORS=ExFxBxDxCxegedabagacad
+
+# Set locale
+export LC_ALL=en_US.UTF-8
+
+# Increase history
+export HISTSIZE=5000
+
+# Brew
+export PATH="/usr/local/sbin:$PATH"
+
+# Gnuutils from brew
+PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
+MANPATH="/usr/local/opt/grep/libexec/gnuman:$MANPATH"
+
+# GO Path
+#export GOPATH="$HOME/portable/go"
+export GOPATH="$HOME/.go"
+export PATH="$PATH:/usr/local/go/bin:$(go env GOPATH)/bin"
+
+# Bash completion
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
+# Custom alias
+alias cp='cp -iv'
+alias mv='mv -v'
+alias rm='rm -iv'
+alias ls='gls --color'
+alias ping='ping -c4'
+alias tmux='TERM=screen-256color tmux'
+alias chmod='gchmod --preserve-root'
+alias ussh='ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+alias uscp='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+alias axel='axel -a -n 20'
+
+function whatismyip() {
+  echo $(curl -sk "https://whatismyip.akamai.com")
+}
+
+function ipinfo() {
+  echo $(curl -s "https://ipinfo.io/$1")
+}
+
+# Startship
+# eval "$(starship init bash)"
+
+# PyEnv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH=$(pyenv root)/shims:$PATH
+# pyenv-virtualenv
+eval "$(pyenv init -)"
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1 # simulate no prompt behaviour
+
+# Custom functions
+iam_user_name="vishnu"
+
+# function to reset existing tokens
+function aws-reset() {
+  unset AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_ACCESS_KEY_ID
+}
+
+function wrap_mfa_usage() {
+  echo "Missing required parameters"
+  echo "${FUNCNAME[0]} profile account-number-without-hyphen mfacode"
+}
+
+
+# wrapper to generate temporary token for a profile
+# specified in the ~/.aws/credentials file
+function wrap_mfa() {
+  if [ -n "$3" ]; then
+    aws-reset
+    eval $(aws --profile "$1" sts get-session-token --serial-number arn:aws:iam::${2}:mfa/${iam_user_name} --token-code $3 | jq -r '"export AWS_ACCESS_KEY_ID=\(.Credentials.AccessKeyId) && export AWS_SECRET_ACCESS_KEY=\(.Credentials.SecretAccessKey) && export AWS_SESSION_TOKEN=\(.Credentials.SessionToken)"')
+  else
+    wrap_mfa_usage
+  fi
+}
+
+# example function using wrapper
+function personal-aws() {
+  wrap_mfa "default" "REPLACE_WITH_ACCOUNT_ID" "$1"
+}
+
+function corp-aws() {
+  iam_user_name="vsreekum" wrap_mfa "corp" "REPLACE_WITH_ACCOUNT_ID" "$1"
+}
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+if [ -f ~/.bashrc.local ]; then
+    source ~/.bashrc.local
+fi
