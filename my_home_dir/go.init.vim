@@ -2,9 +2,6 @@
 "" Custom configs
 "*****************************************************************************
 
-" Auto completion
-let g:coc_global_extensions = ['coc-go']
-
 " go
 " vim-go
 " run :GoBuild or :GoTestCompile based on the go file

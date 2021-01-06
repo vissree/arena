@@ -2,8 +2,8 @@
 "" Custom configs
 "*****************************************************************************
 
-" Auto completion
-let g:coc_global_extensions = ['coc-jedi']
+" Enable Python Omni completion
+set omnifunc=syntaxcomplete#Complete
 
 " vim-python
 augroup vimrc-python
