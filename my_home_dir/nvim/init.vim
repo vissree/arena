@@ -4,7 +4,7 @@
 "*****************************************************************************
 "" Use the pyenv virtualenv
 "*****************************************************************************
-let g:python3_host_prog = '/Users/vishnu/.pyenv/versions/neovim-default/bin/python'
+let g:python3_host_prog = '$HOME/.pyenv/versions/neovim-default/bin/python'
 
 "*****************************************************************************
 "" Vim-Plug core
