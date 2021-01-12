@@ -135,6 +135,8 @@ set tabstop=4
 set softtabstop=0
 set shiftwidth=4
 set expandtab
+set autoindent
+set smartindent
 
 "" Map leader to ,
 let mapleader=','
@@ -168,6 +170,7 @@ let g:session_command_aliases = 1
 syntax on
 set ruler
 set number
+set relativenumber
 
 let no_buffers_menu=1
 
@@ -197,17 +200,15 @@ else
   let g:indentLine_concealcursor = 0
   let g:indentLine_char = '┆'
   let g:indentLine_faster = 1
-
-  
 endif
 
 
 
 "" Disable the blinking cursor.
 set gcr=a:blinkon0
-
+set scrolloff=8
 au TermEnter * setlocal scrolloff=0
-au TermLeave * setlocal scrolloff=3
+au TermLeave * setlocal scrolloff=8
 
 
 "" Status bar
