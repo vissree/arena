@@ -413,7 +413,7 @@ endif
 
 "" Copy/Paste/Cut
 if has('unnamedplus')
-  set clipboard=unnamed,unnamedplus
+  set clipboard=
 endif
 
 noremap YY "+y<CR>
@@ -510,6 +510,9 @@ autocmd BufNewFile,BufRead *.py if filereadable(expand("~/.config/nvim/python.in
 " Frontend
 "
 autocmd BufNewFile,BufRead *.js,*.ts,*.css,*.html if filereadable(expand("~/.config/nvim/web.init.vim")) | source ~/.config/nvim/web.init.vim | endif
+
+" YAML
+autocmd BufNewFile,BufRead *.yaml set tabstop=2 shiftwidth=2
 
 "" Include user's local vim config
 if filereadable(expand("~/.config/nvim/local_init.vim"))
