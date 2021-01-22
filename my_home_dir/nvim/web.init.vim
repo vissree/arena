@@ -1,9 +1,6 @@
 "*****************************************************************************
 "" Custom configs
 "*****************************************************************************
-"Use tabwidth of 2
-set tabstop=2 shiftwidth=2
-
 " html
 " for html files, 2 spaces
 autocmd Filetype html setlocal ts=2 sw=2 expandtab
