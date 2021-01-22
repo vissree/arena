@@ -16,11 +16,6 @@ else
   let curl_exists=expand('curl')
 endif
 
-let g:vim_bootstrap_langs = ""
-let g:vim_bootstrap_editor = "nvim"				" nvim or vim
-let g:vim_bootstrap_theme = "gruvbox"
-let g:vim_bootstrap_frams = ""
-
 if !filereadable(vimplug_exists)
   if !executable(curl_exists)
     echoerr "You have to install curl or first install vim-plug yourself!"
@@ -47,15 +42,9 @@ Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
-Plug 'vim-scripts/grep.vim'
-Plug 'vim-scripts/CSApprox'
-Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
-Plug 'Yggdroot/indentLine'
-Plug 'editor-bootstrap/vim-bootstrap-updater'
 Plug 'tpope/vim-rhubarb' " required by fugitive to :Gbrowse
 Plug 'tpope/vim-surround'
-" Plug 'morhetz/gruvbox'
 Plug 'lifepillar/vim-gruvbox8'
 
 if isdirectory('/usr/local/opt/fzf')
@@ -80,7 +69,7 @@ Plug 'honza/vim-snippets'
 
 "" Code completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-go', 'coc-jedi']
+let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi']
 
 " go
 "" Go Lang Bundle
@@ -180,9 +169,6 @@ let no_buffers_menu=1
 set background=dark
 colorscheme gruvbox8
 let g:gruvbox_filetype_hi_groups = 1
-" set termguicolors
-"let g:gruvbox_contrast_dark='dark'
-"let g:rehash256 = 1
 
 set mousemodel=popup
 set t_Co=256
@@ -195,8 +181,6 @@ if has("gui_running")
     set transparency=7
   endif
 else
-  let g:CSApprox_loaded = 1
-
   " IndentLine
   let g:indentLine_enabled = 1
   let g:indentLine_concealcursor = 0
@@ -313,10 +297,10 @@ augroup vimrc-remember-cursor-position
 augroup END
 
 "" txt
-augroup vimrc-wrapping
-  autocmd!
-  autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
-augroup END
+" augroup vimrc-wrapping
+"  autocmd!
+"  autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
+"  augroup END
 
 "" make/cmake
 augroup vimrc-make-cmake
@@ -360,7 +344,7 @@ nnoremap <silent> <S-t> :tabnew<CR>
 nnoremap <leader>. :lcd %:p:h<CR>
 
 "" Opens an edit command with the path of the currently edited file filled in
-noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+noremap <Leader>ce :e <C-R>=expand("%:p:h") . "/" <CR>
 
 "" Opens a tab edit command with the path of the currently edited file filled
 noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
@@ -412,9 +396,10 @@ if has('autocmd')
 endif
 
 "" Copy/Paste/Cut
-if has('unnamedplus')
-  set clipboard=
-endif
+" if has('unnamedplus')
+"   set clipboard=unnamed,unnamedplus
+" endif
+set clipboard=
 
 noremap YY "+y<CR>
 noremap <leader>p "+gP<CR>
@@ -512,7 +497,8 @@ autocmd BufNewFile,BufRead *.py if filereadable(expand("~/.config/nvim/python.in
 autocmd BufNewFile,BufRead *.js,*.ts,*.css,*.html if filereadable(expand("~/.config/nvim/web.init.vim")) | source ~/.config/nvim/web.init.vim | endif
 
 " YAML
-autocmd BufNewFile,BufRead *.yaml set tabstop=2 shiftwidth=2
+"
+autocmd BufNewFile,BufRead *.yaml,*.template set ts=2 sw=2 expandtab
 
 "" Include user's local vim config
 if filereadable(expand("~/.config/nvim/local_init.vim"))
