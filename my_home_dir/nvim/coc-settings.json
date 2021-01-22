@@ -1,4 +1,14 @@
 {
   "coc.preferences.formatOnSaveFiletypes": ["css", "markdown", "javascript", "typescript"],
-  "emmet.includeLanguages": {"javascript": "javascriptreact"}
+  "emmet.includeLanguages": {"javascript": "javascriptreact"},
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
+    }
+  }
 }
