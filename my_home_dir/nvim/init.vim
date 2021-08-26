@@ -4,7 +4,7 @@
 "*****************************************************************************
 "" Use the pyenv virtualenv
 "*****************************************************************************
-let g:python3_host_prog = '$HOME/.pyenv/versions/neovim-default/bin/python'
+let g:python3_host_prog=$HOME .'/.pyenv/versions/neovim-default/bin/python'
 
 "*****************************************************************************
 "" Vim-Plug core
@@ -47,6 +47,7 @@ Plug 'tpope/vim-rhubarb' " required by fugitive to :Gbrowse
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
 Plug 'lifepillar/vim-gruvbox8'
+Plug 'hashivim/vim-terraform' " Testing vim-terraform plugin
 
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -69,8 +70,14 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 "" Code completion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi']
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi', 'coc-java']
+
+" COQ completion
+Plug 'neovim/nvim-lspconfig'
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
+let g:coq_settings = { 'auto_start': v:true }
 
 " go
 "" Go Lang Bundle
