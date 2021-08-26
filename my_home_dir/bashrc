@@ -19,14 +19,19 @@ export PATH="/usr/local/sbin:$PATH"
 PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 MANPATH="/usr/local/opt/grep/libexec/gnuman:$MANPATH"
 
+# JAVA
+export JAVA_HOME=$(/usr/libexec/java_home)
+
 # GO Path
-#export GOPATH="$HOME/portable/go"
 export GOPATH="$HOME/.go"
-export GOROOT="$(brew --prefix golang)/libexec"
+export GOROOT="/usr/local/opt/go/libexec"
 export PATH="$PATH:/usr/local/go/bin:$(go env GOPATH)/bin:${GOROOT}/bin"
 
 # Bash completion
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
+# K8S Editor
+export KUBE_EDITOR=$(which vim)
 
 # Custom alias
 alias cp='cp -iv'
@@ -54,10 +59,10 @@ function ipinfo() {
 # PyEnv
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH=$(pyenv root)/shims:$PATH
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1 # simulate no prompt behaviour
 # pyenv-virtualenv
 eval "$(pyenv init -)"
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-export PYENV_VIRTUALENV_DISABLE_PROMPT=1 # simulate no prompt behaviour
+# if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 # Custom functions
 iam_user_name="vishnu"
@@ -93,8 +98,32 @@ function corp-aws() {
   iam_user_name="vsreekum" wrap_mfa "corp" "REPLACE_WITH_ACCOUNT_ID" "$1"
 }
 
+# grab current AWS env vars
+function save_aws_env() {
+    env | grep AWS > ~/env.tmp
+}
+
+# apply current AWS env vars (in a different shell session)
+function apply_aws_env() {
+    env_file="$HOME/env.tmp"
+    if [ -f "$env_file" ]; then
+        while read line; do
+            export "$line"
+        done < "$env_file"
+    else echo "$env_file not found"
+    fi
+}
+
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 if [ -f ~/.bashrc_local ]; then
     source ~/.bashrc_local
 fi
+
+function mkandcd() {
+    mkdir -p $1 && cd $1
+}
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
