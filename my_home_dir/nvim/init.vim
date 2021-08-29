@@ -1,4 +1,3 @@
-" vim-bootstrap 2021-01-05 11:36:56
 "
 "
 "*****************************************************************************
@@ -35,16 +34,13 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+let g:chadtree_settings = {'theme.icon_glyph_set': "ascii"}
+
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'airblade/vim-gitgutter'
 Plug 'majutsushi/tagbar'
-Plug 'tpope/vim-rhubarb' " required by fugitive to :Gbrowse
-Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
 Plug 'lifepillar/vim-gruvbox8'
 Plug 'hashivim/vim-terraform' " Testing vim-terraform plugin
@@ -61,23 +57,9 @@ if exists('make')
 endif
 Plug 'Shougo/vimproc.vim', {'do': g:make}
 
-"" Vim-Session
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-session'
-
-"" Snippets
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-
 "" Code completion
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi', 'coc-java']
-
-" COQ completion
-Plug 'neovim/nvim-lspconfig'
-Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
-Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
-let g:coq_settings = { 'auto_start': v:true }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi']
 
 " go
 "" Go Lang Bundle
@@ -85,25 +67,11 @@ Plug 'fatih/vim-go', {'do': ':GoInstallBinaries', 'for': 'go'}
 
 " python
 Plug 'davidhalter/jedi-vim', {'for': 'python'}
-Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
 Plug 'psf/black', {'branch': 'stable', 'for': 'python'}
-
-" html
-"" HTML Bundle
-Plug 'hail2u/vim-css3-syntax'
-Plug 'gko/vim-coloresque'
-Plug 'tpope/vim-haml'
-Plug 'mattn/emmet-vim'
-
 
 " javascript
 "" Javascript Bundle
 Plug 'jelera/vim-javascript-syntax', {'for': 'javascript'}
-
-
-" typescript
-Plug 'leafgarland/typescript-vim', {'for': 'typescript'}
-Plug 'HerringtonDarkholme/yats.vim', {'for': 'typescript'}
 
 "" Include user's extra bundle
 if filereadable(expand("~/.config/nvim/local_bundles.vim"))
@@ -250,18 +218,6 @@ cnoreabbrev W w
 cnoreabbrev Q q
 cnoreabbrev Qall qall
 
-"" NERDTree configuration
-let g:NERDTreeChDirMode=2
-let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
-let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
-let g:NERDTreeShowBookmarks=1
-let g:nerdtree_tabs_focus_on_files=1
-let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
-let g:NERDTreeWinSize = 30
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
-nnoremap <silent> <F2> :NERDTreeFind<CR>
-nnoremap <silent> <F3> :NERDTreeToggle<CR>
-
 " grep.vim
 nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
@@ -303,12 +259,6 @@ augroup vimrc-remember-cursor-position
   autocmd!
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 augroup END
-
-"" txt
-" augroup vimrc-wrapping
-"  autocmd!
-"  autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
-"  augroup END
 
 "" make/cmake
 augroup vimrc-make-cmake
@@ -403,10 +353,6 @@ if has('autocmd')
   autocmd GUIEnter * set visualbell t_vb=
 endif
 
-"" Copy/Paste/Cut
-" if has('unnamedplus')
-"   set clipboard=unnamed,unnamedplus
-" endif
 set clipboard=
 
 noremap YY "+y<CR>
