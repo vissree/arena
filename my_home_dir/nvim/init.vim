@@ -42,6 +42,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'majutsushi/tagbar'
 Plug 'jiangmiao/auto-pairs'
+Plug 'tpope/vim-surround'
 Plug 'lifepillar/vim-gruvbox8'
 Plug 'hashivim/vim-terraform' " Testing vim-terraform plugin
 
@@ -59,7 +60,7 @@ Plug 'Shougo/vimproc.vim', {'do': g:make}
 
 "" Code completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi']
+let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi', 'coc-clangd', 'coc-java']
 
 " go
 "" Go Lang Bundle
@@ -72,6 +73,9 @@ Plug 'psf/black', {'branch': 'stable', 'for': 'python'}
 " javascript
 "" Javascript Bundle
 Plug 'jelera/vim-javascript-syntax', {'for': 'javascript'}
+
+" Install vim script test suite
+Plug 'junegunn/vader.vim'
 
 "" Include user's extra bundle
 if filereadable(expand("~/.config/nvim/local_bundles.vim"))
