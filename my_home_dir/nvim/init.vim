@@ -77,7 +77,10 @@ Plug 'jelera/vim-javascript-syntax', {'for': 'javascript'}
 " Install vim script test suite
 Plug 'junegunn/vader.vim'
 
-"" Include user's extra bundle
+" Markdown
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+
+""" Include user's extra bundle
 if filereadable(expand("~/.config/nvim/local_bundles.vim"))
   source ~/.config/nvim/local_bundles.vim
 endif
