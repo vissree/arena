@@ -60,7 +60,7 @@ Plug 'Shougo/vimproc.vim', {'do': g:make}
 
 "" Code completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi', 'coc-clangd', 'coc-java']
+let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi', 'coc-clangd', 'coc-java', 'coc-swagger']
 
 " go
 "" Go Lang Bundle
@@ -468,6 +468,10 @@ autocmd BufNewFile,BufRead *.yaml,*.template set ts=2 sw=2 expandtab
 if filereadable(expand("~/.config/nvim/local_init.vim"))
   source ~/.config/nvim/local_init.vim
 endif
+
+" Swagger
+"
+command -nargs=0 Swagger :CocCommand swagger.render
 
 "*****************************************************************************
 "*****************************************************************************
