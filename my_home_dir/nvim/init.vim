@@ -43,7 +43,8 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'majutsushi/tagbar'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
-Plug 'lifepillar/vim-gruvbox8'
+" Plug 'lifepillar/vim-gruvbox8'
+Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'hashivim/vim-terraform' " Testing vim-terraform plugin
 
 if isdirectory('/usr/local/opt/fzf')
@@ -60,7 +61,7 @@ Plug 'Shougo/vimproc.vim', {'do': g:make}
 
 "" Code completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi', 'coc-clangd', 'coc-java', 'coc-swagger']
+let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-yaml', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-jedi', 'coc-clangd', 'coc-java', 'coc-swagger']
 
 " go
 "" Go Lang Bundle
@@ -141,6 +142,11 @@ let g:session_autosave = "no"
 let g:session_command_aliases = 1
 
 "*****************************************************************************
+"" Coc-Nvim Setup
+"*****************************************************************************
+source ~/.config/nvim/coc-mappings.vim
+
+"*****************************************************************************
 "" Visual Settings
 "*****************************************************************************
 syntax on
@@ -153,8 +159,7 @@ let no_buffers_menu=1
 
 " color, font and size
 set background=dark
-colorscheme gruvbox8
-let g:gruvbox_filetype_hi_groups = 1
+colorscheme dracula
 
 set mousemodel=popup
 set t_Co=256
@@ -212,6 +217,10 @@ let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
 let g:airline_skip_empty_sections = 1
+let g:airline#extensions#coc#error_symbol = 'Error:'
+let airline#extensions#coc#warning_symbol = 'Warning:'
+let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
+let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
 
 "*****************************************************************************
 "" Abbreviations
@@ -463,6 +472,10 @@ autocmd BufNewFile,BufRead *.js,*.ts,*.css,*.html if filereadable(expand("~/.con
 " YAML
 "
 autocmd BufNewFile,BufRead *.yaml,*.template set ts=2 sw=2 expandtab
+
+" Terraform
+"
+autocmd BufNewFile,BufRead *.tf,*.terraform,*.tfvars,*.hcl if filereadable(expand("~/.config/nvim/terraform.init.vim")) | source ~/.config/nvim/terraform.init.vim | endif
 
 "" Include user's local vim config
 if filereadable(expand("~/.config/nvim/local_init.vim"))
